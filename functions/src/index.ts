@@ -2,13 +2,11 @@ import * as functions from "firebase-functions";
 import admin from "firebase-admin";
 import TwilioClient from "twilio";
 
-const client = TwilioClient(
-  functions.config().twilio.account_id,
-  functions.config().twilio.auth_token
-);
-
 admin.initializeApp();
 const db = admin.firestore();
+
+const { account_sid, auth_token } = functions.config().twilio;
+const client = TwilioClient(account_sid, auth_token);
 
 interface RequestBody {
   foo: String;
