@@ -1,9 +1,26 @@
 import * as functions from "firebase-functions";
+import admin from "firebase-admin";
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
+admin.initializeApp();
+const db = admin.firestore();
 
-export const helloWorld = functions.https.onRequest((request, response) => {
-  functions.logger.info("Hello logs!", { structuredData: true });
-  response.send("Hello from Firebase!");
-});
+interface RequestBody {
+  foo: String;
+  bar: String;
+}
+
+export const postEvent = functions.https.onRequest(
+  async (request, response) => {
+    // Check for POST request
+    if (request.method !== "POST") {
+      response.status(400).send("Please send a POST request");
+      return;
+    }
+
+    let body: RequestBody = JSON.parse(request.body);
+
+    await db.collection("anomalies").add(body);
+
+    response.send("OK!");
+  }
+);
