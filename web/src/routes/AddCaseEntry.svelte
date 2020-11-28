@@ -1,14 +1,17 @@
 <script lang="ts">
   import { navigate } from "svelte-routing";
   import firebase from "firebase";
-
   import { Link } from "svelte-routing";
+  import { parse } from "query-string";
+
   import UploadImage from "./UploadImage.svelte";
 
   export let caseId: string;
+  export let location: any;
 
   const db = firebase.firestore();
 
+  let measurements: any[] = [];
   let images: string[] = [];
   let title: string = "";
   let description: string = "";
@@ -17,20 +20,42 @@
     images = [...images, e.detail.downloadURL];
   }
 
+  const { measurement } = parse(location.search);
+  if (measurement) {
+    db.doc(`cases/${caseId}/unseen_measurements/${measurement}`)
+      .get()
+      .then((res) => {
+        if (!res) {
+          return;
+        }
+
+        const newMeasurement = res.data();
+        measurements = [...measurements, newMeasurement];
+      });
+  }
+
   async function save() {
+    const imageAttachments = images.map((x) => ({
+      type: "photo",
+      alt: "",
+      caption: "",
+      url: x,
+    }));
+
     const entry = {
       title,
       description,
       timestamp: firebase.firestore.Timestamp.now(),
-      attachments: images.map((x) => ({
-        type: "photo",
-        alt: "",
-        caption: "",
-        url: x,
-      })),
+      attachments: [...imageAttachments, ...measurements],
     };
 
     await db.collection(`cases/${caseId}/entries`).add(entry);
+
+    if (measurement) {
+      await db
+        .doc(`cases/${caseId}/unseen_measurements/${measurement}`)
+        .delete();
+    }
 
     navigate(`/case/${caseId}`);
   }
@@ -72,6 +97,26 @@
 
   <UploadImage on:imageUploadSucceeded={imageUploadSucceeded} />
 </div>
+
+{#if measurements.length > 0}
+  <div class="container">
+    <div class="form-row">
+      <ul>
+        {#each measurements as measurement}
+          <li>
+            <div>
+              {measurement.formula}
+              {measurement.diff}
+              {measurement.sensorId}
+              {measurement.timestamp}
+              {measurement.type}
+            </div>
+          </li>
+        {/each}
+      </ul>
+    </div>
+  </div>
+{/if}
 
 <div class="container">
   <button on:click={save}>Save this entry</button>
