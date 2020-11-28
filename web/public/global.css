@@ -67,7 +67,6 @@ button:focus {
 	border-color: #666;
 }
 
-
 .add-item {
 	position: fixed;
 	left: calc(50% - 30px);
@@ -83,4 +82,12 @@ button:focus {
 .add-item span {
 	line-height: 52px;
 	font-size: 40px;
+}
+
+img {
+	max-width: 100%;
+}
+
+figure {
+	margin: 0;
 }
