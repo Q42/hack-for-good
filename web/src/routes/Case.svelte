@@ -12,7 +12,7 @@
       day: "numeric",
     };
 
-    return new Date(timestamp.seconds).toLocaleString(undefined, options);
+    return new Date(timestamp).toLocaleString(undefined, options);
   }
 </script>
 
@@ -69,7 +69,7 @@
         {#each entries as entry}
           <li class="entry">
             <h3 class="entry-title">{entry.title}</h3>
-            <p class="timestamp">{readableDate(entry.timestamp)}</p>
+            <p class="timestamp">{readableDate(entry.timestamp.toDate())}</p>
             <p>{entry.description}</p>
 
             {#each entry.attachments as attachment}
