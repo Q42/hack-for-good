@@ -19,10 +19,10 @@ def check_for_anomalies(event, context):
     send_current_situation(api, current_situation)
 
     # Check for anamolies
-    for formula in current_situation:
-        evaluated_measurement = current_situation[formula]['ONE_DAY']
+    for formula in current_situation['measurements']:
+        evaluated_measurement = current_situation['measurements'][formula]['ONE_DAY']
         if not evaluated_measurement['level'] is "NO_ANOMALY":
-            send_anomaly(api, formula, evaluated_measurement)
+            send_anomaly(api, formula, evaluated_measurement, current_situation['timestamp'])
 
 def get_current_situation(api):
     formulas = ['PM10', 'PM25', 'NO2', 'NO', 'O3']
@@ -45,7 +45,7 @@ def send_current_situation(api, current_situation):
     }
     send_to_backend(payload)
 
-def send_anomaly(api, formula, anomaly):
+def send_anomaly(api, formula, anomaly, timestamp):
     payload = {
         "source": api.source,
         "sensorId": api.sensor_id,
@@ -53,7 +53,8 @@ def send_anomaly(api, formula, anomaly):
         "anomaly": {
             "type": anomaly['level'],
             "formula": formula,
-            "diff": anomaly['value']
+            "diff": anomaly['value'],
+            "timestamp": timestamp
         }
     }
     send_to_backend(payload)
@@ -145,12 +146,14 @@ class LuchtmeetnetData:
             return None
 
     def get_current_report(self, time_deltas):
-        the_report = defaultdict(dict)
+        the_report = defaultdict()
         timestamp = datetime.now(timezone.utc).replace(hour=12, minute=0, second=0, microsecond=0).isoformat()
+        the_report['timestamp'] = timestamp
+        the_report['measurements'] = defaultdict(dict)
         
         for metric in self.measurements:
             current_measurement = self.measurements[metric][timestamp]
-            the_report[metric]["NOW"] = {
+            the_report['measurements'][metric]["NOW"] = {
                 'value': current_measurement.value,
                 'level': current_measurement.evaluate()
             }
@@ -160,7 +163,7 @@ class LuchtmeetnetData:
                 delta_time_string = result_time.isoformat()
                 
                 delta_measurement = self.get_timestamp(metric, delta_time_string)
-                the_report[metric][enum] = {
+                the_report['measurements'][metric][enum] = {
                     'value': current_measurement.compare(delta_measurement),
                     'level': current_measurement.evaluate_change(delta_measurement)
                 }
