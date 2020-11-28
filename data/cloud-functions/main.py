@@ -147,26 +147,27 @@ class LuchtmeetnetData:
 
     def get_current_report(self, time_deltas):
         the_report = defaultdict()
-        timestamp = datetime.now(timezone.utc).replace(hour=12, minute=0, second=0, microsecond=0).isoformat()
+        timestamp = datetime.now(timezone.utc).replace(minute=0, second=0, microsecond=0).isoformat()
         the_report['timestamp'] = timestamp
         the_report['measurements'] = defaultdict(dict)
         
         for metric in self.measurements:
-            current_measurement = self.measurements[metric][timestamp]
-            the_report['measurements'][metric]["NOW"] = {
-                'value': current_measurement.value,
-                'level': current_measurement.evaluate()
-            }
-            
-            for enum, time_delta in time_deltas:
-                result_time = current_measurement.timestamp - time_delta
-                delta_time_string = result_time.isoformat()
-                
-                delta_measurement = self.get_timestamp(metric, delta_time_string)
-                the_report['measurements'][metric][enum] = {
-                    'value': current_measurement.compare(delta_measurement),
-                    'level': current_measurement.evaluate_change(delta_measurement)
+            if timestamp in self.measurements[metric]:
+                current_measurement = self.measurements[metric][timestamp]
+                the_report['measurements'][metric]["NOW"] = {
+                    'value': current_measurement.value,
+                    'level': current_measurement.evaluate()
                 }
+                
+                for enum, time_delta in time_deltas:
+                    result_time = current_measurement.timestamp - time_delta
+                    delta_time_string = result_time.isoformat()
+                    
+                    delta_measurement = self.get_timestamp(metric, delta_time_string)
+                    the_report['measurements'][metric][enum] = {
+                        'value': current_measurement.compare(delta_measurement),
+                        'level': current_measurement.evaluate_change(delta_measurement)
+                    }
         
         return the_report
 
