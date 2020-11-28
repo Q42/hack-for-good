@@ -1,33 +1,64 @@
 <script lang="ts">
   import firebase from "firebase/app";
+  import { createEventDispatcher } from "svelte";
 
   const storage = firebase.storage();
+  const dispatch = createEventDispatcher();
 
   let files: FileList | undefined = undefined;
+  let uploadButtonEnabled = false;
 
-  let userCredentials = firebase.auth().signInAnonymously();
+  firebase.auth().signInAnonymously();
+  firebase.auth().onAuthStateChanged(() => {
+    uploadButtonEnabled = true;
+  });
 
   $: uploadImage(files);
 
-  function uploadImage(files: FileList | undefined) {
+  async function uploadImage(files: FileList | undefined) {
     let first = files?.item(0);
     if (!first) {
       return;
     }
 
     const ref = storage.ref().child(first.name);
-    ref.put(first).then((res) => {
-      console.log(res);
+    await ref.put(first);
+
+    const downloadURL = await ref.getDownloadURL();
+    dispatch("imageUploadSucceeded", {
+      downloadURL,
     });
   }
 </script>
 
-<div>
-  {#await userCredentials}
-    <p>Waiting for user to login</p>
-  {:then user}
-    <p>User is logged in</p>
+<style>
+  [type="file"] {
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    height: 1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute !important;
+    white-space: nowrap;
+    width: 1px;
+  }
 
-    <input type="file" accept="image/png, image/jpeg" bind:files />
-  {/await}
+  label {
+    padding: 5px;
+    background-color: red;
+  }
+
+  label.disabled {
+    background-color: grey;
+  }
+</style>
+
+<div>
+  <input
+    type="file"
+    disabled={!uploadButtonEnabled}
+    accept="image/png, image/jpeg"
+    id="file"
+    bind:files />
+  <label for="file" class:disabled={!uploadButtonEnabled}>Upload</label>
 </div>
