@@ -5,20 +5,20 @@
   export let id = 0;
 </script>
 
-<Doc path="cases/{id}" let:data={caseEntry}>
+<Doc path="cases/{id}" let:data={caseInstance} let:ref={caseRef}>
   <header class="container">
     <h1>
-      { caseEntry.name }
+      { caseInstance.name }
     </h1>
     <p>
-      { caseEntry.description }
+      { caseInstance.description }
     </p>
   </header>
 
   <main class="container">
     <h2>Sensors</h2>
     <ul>
-      {#each caseEntry.sensors as sensor}
+      {#each caseInstance.sensors as sensor}
         <li>
           {sensor}
         </li>
