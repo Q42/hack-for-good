@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { Link } from 'svelte-routing';
+
   export let caseId = 0;
 </script>
 
@@ -6,6 +8,10 @@
   <h1>
     Add case entry
   </h1>
+
+  <Link to="case/{caseId}" getProps={() => ({ class: 'close' })}>
+    <span>+</span>
+  </Link>
 </header>
 
 <main class="container">
