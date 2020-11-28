@@ -2,6 +2,7 @@
   import { navigate } from "svelte-routing";
   import firebase from "firebase";
 
+  import { Link } from "svelte-routing";
   import UploadImage from "./UploadImage.svelte";
 
   export let caseId: string;
@@ -51,6 +52,10 @@
 
 <header class="container">
   <h1>Add case entry</h1>
+
+  <Link to="case/{caseId}" getProps={() => ({ class: 'close' })}>
+    <span>⊗</span>
+  </Link>
 </header>
 
 <main class="container">
@@ -60,6 +65,7 @@
   </div>
   <div class="form-row">
     <UploadImage on:imageUploadSucceeded={imageUploadSucceeded} />
+
     <ul>
       {#each images as image}
         <!-- svelte-ignore a11y-img-redundant-alt -->
