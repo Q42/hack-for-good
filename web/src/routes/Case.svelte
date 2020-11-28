@@ -16,6 +16,16 @@
   </header>
 
   <main class="container">
+    <h2>Sensors</h2>
+    <ul>
+      {#each caseEntry.sensors as sensor}
+        <li>
+          {sensor}
+        </li>
+      {/each}
+    </ul>
+
+    <h2>Case items</h2>
     <p>
       Case item 1
     </p>
