@@ -10,7 +10,7 @@
 
 <Router url="{url}">
 	<Route path="case/:id" component="{Case}" />
-	<Route path="case-item/:case-id" component="{CaseItem}" />
+	<Route path="case-item/:caseId" component="{CaseItem}" />
 	<Route path="/" component="{Home}" />
 	<Route path="*path" component="{Error404}" />
 </Router>
