@@ -60,8 +60,12 @@
     display: block;
     text-align: center;
     margin: 21px 0;
-    padding: 20px;
+    padding: 30px 10px;
     font-weight: bold;
+    background: white;
+    border: 1px solid #ccc;
+    color: #333;
+    border-radius: 5px;
   }
 
   label.disabled {

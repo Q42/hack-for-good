@@ -44,7 +44,7 @@
   </h1>
 </div>
 
-<main class="container">
+<div class="container">
   <div class="form-row">
     <label for="title-input">Title</label>
     <input id="title-input" bind:value={title} type="text" />
@@ -54,6 +54,12 @@
     <label for="description-input">Description</label>
     <textarea id="description-input" bind:value={description} />
   </div>
+</div>
+
+<div class="container bg">
+  <h2>
+    Images
+  </h2>
 
   {#if images.length > 0}
     <ul>
@@ -65,9 +71,11 @@
   {/if}
 
   <UploadImage on:imageUploadSucceeded={imageUploadSucceeded} />
+</div>
 
-  <button on:click={save}>Save</button>
-</main>
+<div class="container">
+  <button on:click={save}>Save this entry</button>
+</div>
 
 <style>
   .header {
@@ -78,19 +86,22 @@
     margin-top: 0;
   }
 
-  main.container {
-    display: flex;
-    flex-direction: column;
-    gap: 21px;
-  }
-
   .form-row {
     display: flex;
     flex-direction: column;
   }
 
-  label {
+  .form-row + .form-row {
+    margin-top: 21px;
+  }
+
+  .form-row label {
     margin-bottom: 5px;
     font-weight: bold;
+  }
+
+  .container.bg {
+    background: #eee;
+    margin: 20px 0;
   }
 </style>
