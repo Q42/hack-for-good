@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   export let id = 0;
 </script>
 
