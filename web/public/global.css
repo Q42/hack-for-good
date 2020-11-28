@@ -20,9 +20,13 @@ body {
 }
 
 header {
-	background: #ddd;
-	border-bottom: 1px solid grey;
+	background: rgb(0,100,200);
+	color: white;
 	padding-bottom: 5px;
+}
+
+header a {
+	color: #ddd;
 }
 
 h1 {
@@ -43,17 +47,24 @@ input, button, select, textarea, .add-item {
 	padding: 0;
 	margin: 0;
 	border: 1px solid #ccc;
-	border-radius: 2px;
+	border-radius: 0;
 }
 
 input:disabled {
 	color: #ccc;
 }
 
-button {
+input[type="text"] {
+	padding: 7px 15px;
+	border-width: 2px;
+}
+
+button, .button {
 	color: #333;
-	background-color: #f4f4f4;
+	background-color: white;
 	outline: none;
+	border: 4px solid rgb(0,100,200);
+	border-radius: 10px;
 }
 
 button:disabled{
@@ -64,7 +75,7 @@ button:not(:disabled):active {
 	background-color: #ddd;
 }
 
-button:focus {
+button:focus, .button:focus {
 	border-color: #666;
 }
 
@@ -113,7 +124,7 @@ button:focus {
 	font-size: 40px;
 }
 
-.back-to-home {
+a.back {
 	text-decoration: none;
 }
 

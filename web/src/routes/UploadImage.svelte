@@ -31,8 +31,17 @@
   }
 </script>
 
+<input
+  type="file"
+  disabled={!uploadButtonEnabled}
+  accept="image/png, image/jpeg"
+  id="file"
+  bind:files />
+
+<label for="file" class="button" class:disabled={!uploadButtonEnabled}>Add an image</label>
+
 <style>
-  [type="file"] {
+  input {
     border: 0;
     clip: rect(0, 0, 0, 0);
     height: 1px;
@@ -43,22 +52,20 @@
     width: 1px;
   }
 
+  input:focus + label {
+    border-color: #666;
+  }
+
   label {
-    padding: 5px;
-    background-color: red;
+    display: block;
+    text-align: center;
+    margin: 21px 0;
+    padding: 20px;
+    font-weight: bold;
   }
 
   label.disabled {
-    background-color: grey;
+    opacity: 0.5;
+    cursor: disabled;
   }
 </style>
-
-<div>
-  <input
-    type="file"
-    disabled={!uploadButtonEnabled}
-    accept="image/png, image/jpeg"
-    id="file"
-    bind:files />
-  <label for="file" class:disabled={!uploadButtonEnabled}>Upload</label>
-</div>

@@ -11,43 +11,59 @@
   }
 </script>
 
-<header class="container">
+<div class="container header">
+  <Link to="case/{caseId}" getProps={() => ({ class: 'back' })}>↩ Cancel</Link>
+
   <h1>
     Add case entry
   </h1>
-
-  <Link to="case/{caseId}" getProps={() => ({ class: 'close' })}>
-    <span>⊗</span>
-  </Link>
-</header>
+</div>
 
 <main class="container">
   <div class="form-row">
     <label for="title-input"> Title </label>
-    <input id="title-input" type="text" />
+    <input id="title-input" type="text" name="title" />
   </div>
-  <div class="form-row">
-    <UploadImage on:imageUploadSucceeded={imageUploadSucceeded} />
 
+  <div class="form-row">
+    <label for="description-input">Description</label>
+    <input id="description-input" type="text" name="description" />
+  </div>
+
+  {#if images.length > 0}
     <ul>
       {#each images as image}
         <!-- svelte-ignore a11y-img-redundant-alt -->
         <li><img src={image} alt="User uploaded image" /></li>
       {/each}
     </ul>
-  </div>
+  {/if}
+
+  <UploadImage on:imageUploadSucceeded={imageUploadSucceeded} />
 </main>
 
 <style>
+  .header {
+    padding-top: 35px;
+  }
+
+  h1 {
+    margin-top: 0;
+  }
+
+  main.container {
+    display: flex;
+    flex-direction: column;
+    gap: 21px;
+  }
+
   .form-row {
     display: flex;
+    flex-direction: column;
   }
 
   label {
-    margin-right: 25px;
-  }
-
-  input {
-    flex-grow: 1;
+    margin-bottom: 5px;
+    font-weight: bold;
   }
 </style>

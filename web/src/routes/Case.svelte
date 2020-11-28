@@ -18,7 +18,7 @@
 
 <Doc path="cases/{id}" let:data={caseInstance} let:ref={caseRef}>
   <header class="container">
-    <Link to="/"  getProps={() => ({ class: 'back-to-home' })}>↩ Home</Link>
+    <Link to="/"  getProps={() => ({ class: 'back' })}>↩ Home</Link>
 
     <h1>
       { caseInstance.name }
@@ -79,8 +79,6 @@
 
 <style>
   header {
-    background: #ddd;
-    border-bottom: 1px solid grey;
     padding-top: 35px;
     padding-bottom: 5px;
   }
