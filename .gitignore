@@ -106,3 +106,4 @@ dist
 .firebase
 
 public/build/
+notebooks/.ipynb_checkpoints
