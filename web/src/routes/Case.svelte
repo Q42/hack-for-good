@@ -64,10 +64,7 @@
     </ul>
 
     <h2>Case entries</h2>
-    <Collection
-      path={caseRef.collection('entries')}
-      let:data={entries}
-      let:ref={entryRef}>
+    <Collection path={caseRef.collection('entries')} let:data={entries}>
       <ul>
         {#each entries as entry}
           <li class="entry">
@@ -75,20 +72,16 @@
             <p class="timestamp">{readableDate(entry.timestamp)}</p>
             <p>{entry.description}</p>
 
-            <Collection
-              path={entryRef.doc(entry.id).collection('attachments')}
-              let:data={attachments}>
-              {#each attachments as attachment}
-                <div class="attachment">
-                  {#if attachment.type === 'photo'}
-                    <figure>
-                      <img src={attachment.url} alt={attachment.alt} />
-                      <figcaption>{attachment.caption}</figcaption>
-                    </figure>
-                  {/if}
-                </div>
-              {/each}
-            </Collection>
+            {#each entry.attachments as attachment}
+              <div class="attachment">
+                {#if attachment.type === 'photo'}
+                  <figure>
+                    <img src={attachment.url} alt={attachment.alt} />
+                    <figcaption>{attachment.caption}</figcaption>
+                  </figure>
+                {/if}
+              </div>
+            {/each}
           </li>
         {/each}
       </ul>
