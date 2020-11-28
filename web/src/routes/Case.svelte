@@ -74,7 +74,7 @@
 </Doc>
 
 <Link to="add-case-entry/{id}" getProps={() => ({ class: 'add-item', 'aria-label': 'add case item' })}>
-  <span>+</span>
+  <span>⊕</span>
 </Link>
 
 <style>

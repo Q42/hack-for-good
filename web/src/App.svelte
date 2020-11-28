@@ -41,7 +41,5 @@
 
     <Route path="/" component={Home} />
     <Route path="*path" component={Error404} />
-
-    <Route path="/uploadImage" component={UploadImage} />
   </Router>
 </FirebaseApp>
