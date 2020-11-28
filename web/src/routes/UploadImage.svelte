@@ -1,15 +1,15 @@
 <script lang="ts">
-  import firebase from "firebase/app";
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, getContext } from "svelte";
+  const app = getContext("firebase").getFirebase();
 
-  const storage = firebase.storage();
+  const storage = app.storage();
   const dispatch = createEventDispatcher();
 
   let files: FileList | undefined = undefined;
   let uploadButtonEnabled = false;
 
-  firebase.auth().signInAnonymously();
-  firebase.auth().onAuthStateChanged(() => {
+  app.auth().signInAnonymously();
+  app.auth().onAuthStateChanged(() => {
     uploadButtonEnabled = true;
   });
 
