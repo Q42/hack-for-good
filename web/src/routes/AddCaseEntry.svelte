@@ -64,6 +64,10 @@
     <input id="title-input" bind:value={title} type="text" />
   </div>
   <div class="form-row">
+    <label for="description-input"> Description </label>
+    <textarea id="description-input" bind:value={description} />
+  </div>
+  <div class="form-row">
     <UploadImage on:imageUploadSucceeded={imageUploadSucceeded} />
 
     <ul>
