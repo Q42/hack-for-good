@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   export let caseId = 0;
 </script>
 
