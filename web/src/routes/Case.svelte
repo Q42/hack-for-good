@@ -10,8 +10,6 @@
       year: 'numeric',
       month: 'long',
       day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric'
     }
 
     return new Date(timestamp.seconds).toLocaleString(undefined, options)
@@ -42,13 +40,13 @@
     <Collection path={caseRef.collection('entries')} let:data={entries} let:ref={entryRef}>
       <ul>
         {#each entries as entry}
-          <li>
+          <li class="entry">
+            <h3 class="entry-title">
+              {entry.title}
+            </h3>
             <p class="timestamp">
               {readableDate(entry.timestamp)}
             </p>
-            <h3>
-              {entry.title}
-            </h3>
             <p>
               {entry.description}
             </p>
@@ -86,5 +84,19 @@
 
   main {
     padding-bottom: 100px;
+  }
+
+  .timestamp {
+    margin: 0;
+    color: gray;
+    font-size: small;
+  }
+
+  .entry-title {
+    margin: 0;
+  }
+
+  .entry-title + p {
+    margin-top: 0;
   }
 </style>
