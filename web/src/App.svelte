@@ -3,7 +3,7 @@
   import Error404 from "./routes/404.svelte";
   import Home from "./routes/Home.svelte";
   import Case from "./routes/Case.svelte";
-  import CaseItem from "./routes/CaseItem.svelte";
+  import CaseItem from "./routes/AddCaseEntry.svelte";
   import UploadImage from "./routes/UploadImage.svelte";
 
   // import { FirebaseApp, User, Doc, Collection } from 'sveltefire';
@@ -37,10 +37,11 @@
 <FirebaseApp {firebase}>
   <Router {url}>
     <Route path="case/:id" component={Case} />
-    <Route path="case-item/:caseId" component={CaseItem} />
+    <Route path="add-case-entry/:caseId" component={CaseItem} />
 
     <Route path="/" component={Home} />
     <Route path="*path" component={Error404} />
+
     <Route path="/uploadImage" component={UploadImage} />
   </Router>
 </FirebaseApp>
