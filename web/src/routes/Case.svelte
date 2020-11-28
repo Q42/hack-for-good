@@ -63,6 +63,23 @@
       {/each}
     </ul>
 
+    <h2>Unseen notifications</h2>
+    <Collection
+      path={caseRef.collection('unseen_measurements')}
+      let:data={measurements}>
+      <ul>
+        {#each measurements as measurement}
+          <li>
+            <Link to="/add-case-entry/{id}?measurement={measurement.id}">
+              {measurement.formula}
+              {measurement.diff}
+              {measurement.type}
+            </Link>
+          </li>
+        {/each}
+      </ul>
+    </Collection>
+
     <h2>Case entries</h2>
     <Collection path={caseRef.collection('entries')} let:data={entries}>
       <ul>
