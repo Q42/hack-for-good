@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Router, Route } from "svelte-routing";
+	import { Router, Route } from 'svelte-routing';
 	import Error404 from './routes/404.svelte';
 	import Home from './routes/Home.svelte';
 	import Case from './routes/Case.svelte';
