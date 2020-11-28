@@ -8,10 +8,10 @@
 <main class="container">
   <Collection path="cases" let:data={cases}>
     <ul>
-      {#each cases as caseEntry}
+      {#each cases as caseInstance}
         <li>
-          <Link to="case/{caseEntry.id}">
-            {caseEntry.name}
+          <Link to="case/{caseInstance.id}">
+            {caseInstance.name}
           </Link>
         </li>
       {/each}
