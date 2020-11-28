@@ -13,7 +13,7 @@ interface CurrentSituation {
   level: string;
 }
 
-interface RequestBody {
+interface SensorEvent {
   source: string;
   sensorId: string;
   shouldNotify: boolean;
@@ -34,7 +34,7 @@ export const postEvent = functions.https.onRequest(
       return;
     }
 
-    const body = request.body as RequestBody;
+    const body = request.body as SensorEvent;
 
     const casesRef = await db.collection("cases").get();
     const cases = casesRef.docs.map(
@@ -45,32 +45,28 @@ export const postEvent = functions.https.onRequest(
       x.sensors.includes(body.sensorId)
     );
 
-    // Notify all case subscribers if necessary
     if (body.shouldNotify) {
+      // Notify all case subscribers if necessary
       const subscribers = new Set(relevantCases.flatMap((x) => x.subscribers));
       await alertSubscribers(subscribers, JSON.stringify(body));
+
+      // Insert an unseen measurement to be reviewed by a case manager
+      relevantCases.forEach(
+        async (c) => await addUnseenMeasurement(c.id, body)
+      );
     }
-
-    console.log({ relevantCases });
-
-    // Insert an unseen measurement to be reviewed by a case manager
-    relevantCases.forEach(
-      async (c) => await addUnseenMeasurement(c.id, body.current_situation)
-    );
 
     response.send("OK!");
   }
 );
 
-async function addUnseenMeasurement(
-  caseId: string,
-  currentSituation: CurrentSituation
-) {
-  console.log("Adding to", caseId);
+async function addUnseenMeasurement(caseId: string, sensorEvent: SensorEvent) {
+  const { sensorId, current_situation } = sensorEvent;
 
   await db.collection(`cases/${caseId}/unseen_measurements`).add({
-    timestamp: new Date(),
-    ...currentSituation,
+    timestamp: Date.now(),
+    sensorId,
+    ...current_situation,
   });
 }
 
