@@ -7,17 +7,18 @@ const db = admin.firestore();
 const { account_sid, auth_token } = functions.config().twilio;
 const client = TwilioClient(account_sid, auth_token);
 
-interface CurrentSituation {
-  metric: string;
-  value: number;
-  level: string;
+interface AnomalyData {
+  type: string;
+  formula: string;
+  diff: number;
+  timestamp: string;
 }
 
-interface SensorEvent {
+interface AnomalyEvent {
   source: string;
   sensorId: string;
   shouldNotify: boolean;
-  current_situation: CurrentSituation;
+  anomaly: AnomalyData;
 }
 
 interface Case {
@@ -34,7 +35,7 @@ export const postEvent = functions.https.onRequest(
       return;
     }
 
-    const body = request.body as SensorEvent;
+    const body = request.body as AnomalyEvent;
 
     const casesRef = await db.collection("cases").get();
     const cases = casesRef.docs.map(
@@ -60,13 +61,13 @@ export const postEvent = functions.https.onRequest(
   }
 );
 
-async function addUnseenMeasurement(caseId: string, sensorEvent: SensorEvent) {
-  const { sensorId, current_situation } = sensorEvent;
+async function addUnseenMeasurement(caseId: string, anomalyEvent: AnomalyEvent) {
+  const { sensorId, anomaly } = anomalyEvent;
 
   await db.collection(`cases/${caseId}/unseen_measurements`).add({
-    timestamp: Date.now(),
     sensorId,
-    ...current_situation,
+    ...anomaly,
+    timestamp: admin.firestore.Timestamp.fromDate(new Date(anomaly.timestamp)),
   });
 }
 
