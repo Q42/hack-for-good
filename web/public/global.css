@@ -35,7 +35,7 @@ label {
 	display: block;
 }
 
-input, button, select, textarea {
+input, button, select, textarea, .add-item {
 	font-family: inherit;
 	font-size: inherit;
 	padding: 0;
@@ -48,13 +48,13 @@ input:disabled {
 	color: #ccc;
 }
 
-button {
+button, .add-item {
 	color: #333;
 	background-color: #f4f4f4;
 	outline: none;
 }
 
-button:disabled {
+button:disabled{
 	color: #999;
 }
 
@@ -64,4 +64,20 @@ button:not(:disabled):active {
 
 button:focus {
 	border-color: #666;
+}
+
+
+.add-item {
+	position: fixed;
+	left: calc(50% - 30px);
+	bottom: 10px;
+	width: 60px;
+	height: 60px;
+	border-radius: 99px;
+	text-align: center;
+}
+
+.add-item span {
+	line-height: 52px;
+	font-size: 40px;
 }

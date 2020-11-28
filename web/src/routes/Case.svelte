@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { Link } from 'svelte-routing';
+
   export let id = 0;
 </script>
 
@@ -20,23 +22,14 @@
   </p>
 </main>
 
-<button aria-label="add case item" class="add-item">
-  +
-</button>
+<Link to="case-item" getProps={() => ({ class: 'add-item', 'aria-label': 'add case item' })}>
+  <span>+</span>
+</Link>
 
 <style>
   header {
     background: #ddd;
     border-bottom: 1px solid grey;
     padding-bottom: 5px;
-  }
-
-  button.add-item {
-    position: fixed;
-    left: calc(50% - 30px);
-    bottom: 10px;
-    width: 60px;
-    height: 60px;
-    border-radius: 99px;
   }
 </style>
