@@ -12,6 +12,10 @@
   },
   "hosting": {
     "public": "web/public",
+    "predeploy": [
+      "npm --prefix \"$RESOURCE_DIR/../\" run validate",
+      "npm --prefix \"$RESOURCE_DIR/../\" run build"
+    ],
     "ignore": [
       "firebase.json",
       "**/.*",
