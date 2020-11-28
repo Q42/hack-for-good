@@ -4,7 +4,6 @@
   import Home from "./routes/Home.svelte";
   import Case from "./routes/Case.svelte";
   import CaseItem from "./routes/AddCaseEntry.svelte";
-  import UploadImage from "./routes/UploadImage.svelte";
 
   // import { FirebaseApp, User, Doc, Collection } from 'sveltefire';
   import { FirebaseApp } from "sveltefire";
