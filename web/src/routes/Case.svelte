@@ -22,7 +22,7 @@
   </p>
 </main>
 
-<Link to="case-item" getProps={() => ({ class: 'add-item', 'aria-label': 'add case item' })}>
+<Link to="case-item/{id}" getProps={() => ({ class: 'add-item', 'aria-label': 'add case item' })}>
   <span>+</span>
 </Link>
 
