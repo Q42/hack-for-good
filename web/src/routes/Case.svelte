@@ -1,13 +1,21 @@
 <script lang="ts">
   import { Doc, Collection } from "sveltefire";
   import { Link } from "svelte-routing";
+  import firebase from "firebase";
 
   export let id = 0;
 
   let addingSensor = false;
+  let progress = 0;
+
+  const db = firebase.firestore();
 
   const entriesQuery = (ref) => ref.orderBy("timestamp", "desc");
   const unseenMeasurementsQuery = (ref) => ref.orderBy("timestamp", "desc");
+
+  db.collection(`cases/${id}/entries`).onSnapshot((snap) => {
+    progress = Math.min((snap.docs.length / 5) * 100, 100);
+  });
 
   function readableDate(timestamp) {
     const options = {
@@ -48,9 +56,7 @@
     <h1>{caseInstance.name}</h1>
     <p>{caseInstance.description}</p>
 
-    <div class="progress">
-      <span style="width: {getPercentage(caseInstance)}%"></span>
-    </div>
+    <div class="progress"><span style="width: {progress}%" /></div>
   </header>
 
   <div class="container notifications">
