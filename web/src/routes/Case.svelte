@@ -59,7 +59,7 @@
             <Link to="/add-case-entry/{id}?measurement={measurement.id}" getProps={() => ({ class: 'button' })}>
               Add to case
             </Link>
-            <button on:click={() => measurement.ref.delete()} class="secondary">Ignore</button>
+            <button on:click={() => measurement.ref.delete()} class="link">Ignore</button>
           </li>
         {/each}
       </ul>
@@ -153,7 +153,7 @@
   }
 
   .notifications li {
-    background: rgb(175 200 218);
+    background: rgb(236 227 205);
     padding: 10px;
     border-radius: 5px;
   }
@@ -164,6 +164,12 @@
 
   .notifications li p {
     margin-top: 0;
+  }
+
+  .notifications li .link {
+    float: right;
+    margin-top: 12px;
+    margin-right: 10px;
   }
 
   .entries li + li {
