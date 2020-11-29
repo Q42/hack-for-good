@@ -77,7 +77,7 @@
         type="text"
         on:keyup={async (e) => {
           if (e.key === 'Enter') {
-            await caseRef.set({
+            await caseRef.update({
               sensors: [...caseInstance.sensors, e.target.value],
             });
 
