@@ -85,7 +85,7 @@
 
     <ul>
       {#each caseInstance.sensors as sensor}
-        <li>{sensor}</li>
+        <li>{sensor} - luchtmeetnet.nl</li>
       {/each}
     </ul>
     {#if !addingSensor}
