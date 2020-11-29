@@ -33,41 +33,6 @@
   }
 </script>
 
-<style>
-  header {
-    padding-top: 35px;
-    padding-bottom: 5px;
-  }
-
-  header h1 {
-    margin-top: 2px;
-  }
-
-  main {
-    padding-bottom: 100px;
-  }
-
-  .timestamp {
-    margin: 0;
-    color: gray;
-    font-size: small;
-  }
-
-  .entry-title {
-    margin: 0;
-  }
-
-  .entry-title + p {
-    margin-top: 0;
-  }
-
-  .sensor {
-    background-color: lightgray;
-    padding: 15px;
-    border-radius: 10px;
-  }
-</style>
-
 <Doc path="cases/{id}" let:data={caseInstance} let:ref={caseRef}>
   <header class="container">
     <Link to="/" getProps={() => ({ class: 'back' })}>↩ Home</Link>
@@ -76,7 +41,7 @@
     <p>{caseInstance.description}</p>
   </header>
 
-  <main class="container">
+  <div class="container">
     <h2>Unseen notifications</h2>
     <Collection
       path={caseRef.collection('unseen_measurements')}
@@ -95,7 +60,9 @@
         {/each}
       </ul>
     </Collection>
+  </div>
 
+  <div class="container">
     <h2>Sensors</h2>
     <p>You are currently subscribed to anomalous activity on these sensors:</p>
     <ul>
@@ -118,7 +85,9 @@
           }
         }} />
     {/if}
+  </div>
 
+  <div class="container">
     <h2>Case entries</h2>
     <Collection
       path={caseRef.collection('entries')}
@@ -150,7 +119,7 @@
         {/each}
       </ul>
     </Collection>
-  </main>
+  </div>
 </Doc>
 
 <Link
@@ -158,3 +127,37 @@
   getProps={() => ({ class: 'add-item', 'aria-label': 'add case item' })}>
   <span>⊕</span>
 </Link>
+
+<style>
+  header {
+    padding-top: 35px;
+  }
+
+  header h1 {
+    margin-top: 2px;
+  }
+
+  div.container:last-of-type {
+    padding-bottom: 100px;
+  }
+
+  .timestamp {
+    margin: 0;
+    color: gray;
+    font-size: small;
+  }
+
+  .entry-title {
+    margin: 0;
+  }
+
+  .entry-title + p {
+    margin-top: 0;
+  }
+
+  .sensor {
+    background-color: lightgray;
+    padding: 15px;
+    border-radius: 10px;
+  }
+</style>

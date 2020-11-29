@@ -25,11 +25,18 @@ def check_for_anomalies(event, context):
     # Send current situation to backend
     send_current_situation(api, current_situation)
 
-    # Check for anamolies
+    # Check for anamolies in current situation
     for formula in current_situation['measurements']:
-        evaluated_measurement = current_situation['measurements'][formula]['ONE_DAY']
+        evaluated_measurement = current_situation['measurements'][formula]['ONE_HOUR']
         if not evaluated_measurement['level'] is "NO_ANOMALY":
             send_anomaly(api, formula, evaluated_measurement, current_situation['timestamp'])
+
+    # Check for anamolies in yesterday's timeseries
+    timeseries_yesterday = get_timeseries_for_yesterday(api)
+    for formula in timeseries_yesterday:
+        evaluated_timeseries = timeseries_yesterday[formula]
+        if not evaluated_timeseries['level'] is "NO_ANOMALY":
+            send_timeseries_anomaly(api, formula, evaluated_timeseries)
 
 def get_current_situation(api):
     formulas = ['PM10', 'PM25', 'NO2', 'NO', 'O3']
@@ -43,16 +50,15 @@ def get_current_situation(api):
     data = LuchtmeetnetData(api, formulas)
     return data.get_current_report(time_deltas)
 
-def upload_graph_to_bucket(api):
-
+def get_timeseries_for_yesterday(api):
     formulas = ['PM10', 'PM25', 'NO2', 'NO', 'O3']
-    data = LuchtmeetnetData(api, formulas)
-
     time_deltas = []
     time_deltas.append(("ONE_DAY", timedelta(days=1))) # one day
     time_deltas.append(("ONE_WEEK", timedelta(days=7)))
     time_deltas.append(("ONE_MONTH", timedelta(days=30)))
     time_deltas.append(("ONE_YEAR", timedelta(days=365)))
+
+    data = LuchtmeetnetData(api, formulas)
 
     labels = dict()
     labels[1] = 'day before'
@@ -75,7 +81,7 @@ def upload_graph_to_bucket(api):
     client = storage.Client(project='casebuilder-pro-3000')
     bucket = client.bucket('casebuilder-pro-3000-plots')
 
-    urls = []
+    urls = dict()
 
     for metric in formulas:
         filename = f'{int(time.time())}-{metric}.png' # kan Leo/Jaap/Guido vast mooier
@@ -122,6 +128,7 @@ def upload_graph_to_bucket(api):
         # temporarily save image to buffer
         buf = io.BytesIO()
         fig.savefig(buf, format='png')
+        
         # upload buffer contents to gcs
         blob.upload_from_string(
             buf.getvalue(),
@@ -131,7 +138,11 @@ def upload_graph_to_bucket(api):
 
         # gcs url to uploaded matplotlib image
         url = blob.public_url
-        urls.append(url)
+        urls[metric] = {
+            "url": url,
+            "level": "ANOMALOUS_TIMESERIES" if metric == "PM10" else "NO_ANOMALY", # hardcoded, for now
+            "timestamp": dt.isoformat()
+        }
 
     return urls
 
@@ -154,6 +165,20 @@ def send_anomaly(api, formula, anomaly, timestamp):
             "formula": formula,
             "diff": anomaly['value'],
             "timestamp": timestamp
+        }
+    }
+    send_to_backend(payload)
+
+def send_timeseries_anomaly(api, formula, timeseries_anomaly):
+    payload = {
+        "source": api.source,
+        "sensorId": api.sensor_id,
+        "shouldNotify": True, # Muted, for now
+        "anomaly": {
+            "type": timeseries_anomaly['level'],
+            "formula": formula,
+            "url": timeseries_anomaly['url'],
+            "timestamp": timeseries_anomaly['timestamp']
         }
     }
     send_to_backend(payload)
@@ -337,7 +362,10 @@ class Measurement:
 
     def __init__(self, metric, value, timestamp):
         self.metric = metric
-        self.value = float(value) # better safe than sorry
+        if value:
+            self.value = float(value) # better safe than sorry
+        else:
+            self.value = None
         self.timestamp = parse(timestamp)
 
     def evaluate(self):

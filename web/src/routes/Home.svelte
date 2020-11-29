@@ -26,8 +26,6 @@
 <style>
   header {
     padding-top: 50px;
-    display: flex;
-    justify-content: center;
   }
 
   h1 span {

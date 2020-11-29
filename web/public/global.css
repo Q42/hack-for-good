@@ -16,17 +16,26 @@ body {
 }
 
 .container {
-	padding: 10px 25px;
+	padding: 25px;
+}
+
+header.container,
+.header {
+	padding-top: 35px;
+	padding-bottom: 10px;
 }
 
 header {
 	background: rgb(0,100,200);
 	color: white;
-	padding-bottom: 5px;
 }
 
 header a {
 	color: #ddd;
+}
+
+header p {
+	margin: 5px 0 0;
 }
 
 h1 {
@@ -70,6 +79,8 @@ button, .button {
 	border: none;
 	padding: 10px 30px;
 	border-radius: 19px;
+	line-height: 1.15;
+	display: inline-block;
 }
 
 button:disabled{
