@@ -57,7 +57,7 @@
         {#each measurements as measurement}
           <li>
             <p>
-              ⚠ {`${readableType(measurement.type)} in ${measurement.formula}.`}
+              ⚠ {`${readableAnomaly(measurement.type)} in ${measurement.formula}.`}
             </p>
 
             <Link to="/add-case-entry/{id}?measurement={measurement.id}" getProps={() => ({ class: 'button' })}>
