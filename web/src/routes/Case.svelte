@@ -197,4 +197,8 @@
     padding: 15px;
     border-radius: 10px;
   }
+
+  .attachment + .attachment {
+    margin-top: 15px;
+  }
 </style>
