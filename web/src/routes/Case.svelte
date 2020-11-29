@@ -44,6 +44,7 @@
               {measurement.diff}
               {measurement.type}
             </Link>
+            <button on:click={() => measurement.ref.delete()}>Ignore</button>
           </li>
         {/each}
       </ul>
