@@ -48,7 +48,9 @@ export const postEvent = functions.https.onRequest(
 
     if (body.shouldNotify) {
       // Notify all case subscribers if necessary
-      const subscribers = new Set(relevantCases.flatMap((x) => x.subscribers));
+      const subscribers = relevantCases.flatMap((x) =>
+        x.subscribers.map((s): [string, string] => [s, x.id])
+      );
       await alertSubscribers(subscribers, JSON.stringify(body));
 
       // Insert an unseen measurement to be reviewed by a case manager
@@ -61,7 +63,10 @@ export const postEvent = functions.https.onRequest(
   }
 );
 
-async function addUnseenMeasurement(caseId: string, anomalyEvent: AnomalyEvent) {
+async function addUnseenMeasurement(
+  caseId: string,
+  anomalyEvent: AnomalyEvent
+) {
   const { sensorId, anomaly } = anomalyEvent;
 
   await db.collection(`cases/${caseId}/unseen_measurements`).add({
@@ -71,12 +76,15 @@ async function addUnseenMeasurement(caseId: string, anomalyEvent: AnomalyEvent) 
   });
 }
 
-async function alertSubscribers(subscribers: Set<string>, message: string) {
-  subscribers.forEach(async (subscriber) => {
+async function alertSubscribers(
+  subscribers: [string, string][],
+  message: string
+) {
+  subscribers.forEach(async ([subscriber, caseId]) => {
     console.log("Sending message to", subscriber);
 
     await client.messages.create({
-      body: `You received an event: ${message}}`,
+      body: `There's been anomalous activity on one of the sensors you subscribe to. Check https://casebuilder-pro-3000.web.app/case/${caseId}`,
       from: "+12058983913",
       to: subscriber,
     });
