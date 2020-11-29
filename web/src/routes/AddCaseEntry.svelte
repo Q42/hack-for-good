@@ -12,10 +12,10 @@
   const db = firebase.firestore();
 
   type Image = {
-    caption: string,
-    alt: string,
-    url: string
-  }
+    caption: string;
+    alt: string;
+    url: string;
+  };
 
   let measurements: any[] = [];
   let images: Image[] = [];
@@ -23,11 +23,14 @@
   let description: string = "";
 
   function imageUploadSucceeded(e: CustomEvent<{ downloadURL: string }>) {
-    images = [...images, {
-      caption: '',
-      alt: '',
-      url: e.detail.downloadURL
-    }];
+    images = [
+      ...images,
+      {
+        caption: "",
+        alt: "",
+        url: e.detail.downloadURL,
+      },
+    ];
   }
 
   const { measurement } = parse(location.search);
@@ -41,7 +44,14 @@
 
         const newMeasurement = res.data();
         if (newMeasurement.url) {
-          images = [...images, newMeasurement.url];
+          images = [
+            ...images,
+            {
+              caption: "",
+              alt: "",
+              url: newMeasurement.url,
+            },
+          ];
         }
 
         measurements = [...measurements, newMeasurement];
