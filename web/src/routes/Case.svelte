@@ -19,6 +19,18 @@
 
     return new Date(timestamp).toLocaleString(undefined, options);
   }
+
+  function readableType(type) {
+    if (type === "ANOMALOUS_INCREASE") {
+      return "Anomalous increase";
+    }
+
+    if (type === "ANOMALOUS_DECREASE") {
+      return "Anomalous decrease";
+    }
+
+    return "Anomaly";
+  }
 </script>
 
 <Doc path="cases/{id}" let:data={caseInstance} let:ref={caseRef}>
@@ -95,6 +107,11 @@
                     <img src={attachment.url} alt={attachment.alt} />
                     <figcaption>{attachment.caption}</figcaption>
                   </figure>
+                {:else}
+                  <div class="sensor">
+                    <span>Sensor reading:</span>
+                    {`${readableType(attachment.type)} in ${attachment.formula}. Deviation: ${attachment.diff}`}
+                  </div>
                 {/if}
               </div>
             {/each}
@@ -114,7 +131,6 @@
 <style>
   header {
     padding-top: 35px;
-    padding-bottom: 5px;
   }
 
   header h1 {
@@ -137,5 +153,11 @@
 
   .entry-title + p {
     margin-top: 0;
+  }
+
+  .sensor {
+    background-color: lightgray;
+    padding: 15px;
+    border-radius: 10px;
   }
 </style>

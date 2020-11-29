@@ -149,12 +149,8 @@
 </div>
 
 <style>
-  .header {
-    padding-top: 35px;
-  }
-
   h1 {
-    margin-top: 0;
+    margin-top: 2px;
   }
 
   h3 {

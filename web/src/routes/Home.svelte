@@ -26,7 +26,6 @@
 <style>
   header {
     padding-top: 50px;
-    padding-bottom: 10px;
   }
 
   h1 span {
