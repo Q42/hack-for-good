@@ -20,13 +20,17 @@
     return new Date(timestamp).toLocaleString(undefined, options);
   }
 
-  function readableType(type) {
-    if (type === "ANOMALOUS_INCREASE") {
-      return "Anomalous increase";
+  function readableAnomaly(attachment) {
+    if (attachment.type === "ANOMALOUS_INCREASE") {
+      return `Anomalous increase in ${attachment.formula}. Deviation: ${attachment.diff}`;
     }
 
-    if (type === "ANOMALOUS_DECREASE") {
-      return "Anomalous decrease";
+    if (attachment.type === "ANOMALOUS_DECREASE") {
+      return `Anomalous decrease in ${attachment.formula}. Deviation: ${attachment.diff}`;
+    }
+
+    if (attachment.type === "ANOMALOUS_TIMESERIES") {
+      return `Anomalous timeseries for ${attachment.formula}`;
     }
 
     return "Anomaly";
@@ -110,7 +114,7 @@
                 {:else}
                   <div class="sensor">
                     <span>Sensor reading:</span>
-                    {`${readableType(attachment.type)} in ${attachment.formula}. Deviation: ${attachment.diff}`}
+                    {readableAnomaly(attachment)}
                   </div>
                 {/if}
               </div>
