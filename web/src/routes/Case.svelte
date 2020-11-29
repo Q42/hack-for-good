@@ -197,9 +197,9 @@
   }
 
   .sensor {
-    background-color: lightgray;
-    padding: 15px;
-    border-radius: 10px;
+    background-color: #e0e0e0;
+    padding: 10px;
+    border-radius: 5px;
   }
 
   .attachment + .attachment {
