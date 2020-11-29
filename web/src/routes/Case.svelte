@@ -4,6 +4,8 @@
 
   export let id = 0;
 
+  let addingSensor = false;
+
   const entriesQuery = (ref) => ref.orderBy("timestamp", "desc");
   const unseenMeasurementsQuery = (ref) => ref.orderBy("timestamp", "desc");
 
@@ -28,13 +30,6 @@
   </header>
 
   <main class="container">
-    <h2>Sensors</h2>
-    <ul>
-      {#each caseInstance.sensors as sensor}
-        <li>{sensor}</li>
-      {/each}
-    </ul>
-
     <h2>Unseen notifications</h2>
     <Collection
       path={caseRef.collection('unseen_measurements')}
@@ -53,6 +48,29 @@
         {/each}
       </ul>
     </Collection>
+
+    <h2>Sensors</h2>
+    <p>You are currently subscribed to anomalous activity on these sensors:</p>
+    <ul>
+      {#each caseInstance.sensors as sensor}
+        <li>{sensor}</li>
+      {/each}
+    </ul>
+    {#if !addingSensor}
+      <button on:click={() => (addingSensor = true)}>Add</button>
+    {:else}
+      <input
+        type="text"
+        on:keyup={async (e) => {
+          if (e.key === 'Enter') {
+            await caseRef.set({
+              sensors: [...caseInstance.sensors, e.target.value],
+            });
+
+            addingSensor = false;
+          }
+        }} />
+    {/if}
 
     <h2>Case entries</h2>
     <Collection
