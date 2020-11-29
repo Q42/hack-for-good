@@ -4,6 +4,9 @@
 
   export let id = 0;
 
+  const entriesQuery = (ref) => ref.orderBy("timestamp", "desc");
+  const unseenMeasurementsQuery = (ref) => ref.orderBy("timestamp", "desc");
+
   function readableDate(timestamp) {
     const options = {
       weekday: "long",
@@ -35,6 +38,7 @@
     <h2>Unseen notifications</h2>
     <Collection
       path={caseRef.collection('unseen_measurements')}
+      query={unseenMeasurementsQuery}
       let:data={measurements}>
       <ul>
         {#each measurements as measurement}
@@ -51,7 +55,10 @@
     </Collection>
 
     <h2>Case entries</h2>
-    <Collection path={caseRef.collection('entries')} let:data={entries}>
+    <Collection
+      path={caseRef.collection('entries')}
+      query={entriesQuery}
+      let:data={entries}>
       <ul>
         {#each entries as entry}
           <li class="entry">
