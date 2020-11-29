@@ -1,13 +1,21 @@
 <script lang="ts">
   import { Doc, Collection } from "sveltefire";
   import { Link } from "svelte-routing";
+  import firebase from "firebase";
 
   export let id = 0;
 
   let addingSensor = false;
+  let progress = 0;
+
+  const db = firebase.firestore();
 
   const entriesQuery = (ref) => ref.orderBy("timestamp", "desc");
   const unseenMeasurementsQuery = (ref) => ref.orderBy("timestamp", "desc");
+
+  db.collection(`cases/${id}/entries`).onSnapshot((snap) => {
+    progress = Math.min((snap.docs.length / 5) * 100, 100);
+  });
 
   function readableDate(timestamp) {
     const options = {
@@ -50,37 +58,39 @@
     <p class="progress">
       Case progress
       <span class="progressbar">
-        <span style="width: {getPercentage(caseInstance)}%"></span>
+        <span style="width: {progress}%" />
       </span>
     </p>
 
     <p>{caseInstance.description}</p>
+
   </header>
 
-  <div class="container notifications">
-    <h2>Unseen notifications</h2>
+  <Collection
+    path={caseRef.collection('unseen_measurements')}
+    query={unseenMeasurementsQuery}
+    let:data={measurements}>
+    {#if measurements.length > 0}
+      <div class="container notifications">
+        <h2>Unseen notifications</h2>
 
-    <Collection
-      path={caseRef.collection('unseen_measurements')}
-      query={unseenMeasurementsQuery}
-      let:data={measurements}>
+        <ul>
+          {#each measurements as measurement}
+            <li>
+              <p>
+                ⚠ {`${readableAnomaly(measurement.type)} in ${measurement.formula}.`}
+              </p>
 
-      <ul>
-        {#each measurements as measurement}
-          <li>
-            <p>
-              ⚠ {`${readableAnomaly(measurement.type)} in ${measurement.formula}.`}
-            </p>
-
-            <Link to="/add-case-entry/{id}?measurement={measurement.id}" getProps={() => ({ class: 'button' })}>
-              Add to case
-            </Link>
-            <button on:click={() => measurement.ref.delete()} class="link">Ignore</button>
-          </li>
-        {/each}
-      </ul>
-    </Collection>
-  </div>
+              <Link to="/add-case-entry/{id}?measurement={measurement.id}" getProps={() => ({ class: 'button' })}>
+                Add to case
+              </Link>
+              <button on:click={() => measurement.ref.delete()} class="link">Ignore</button>
+            </li>
+          {/each}
+        </ul>
+      </div>
+    {/if}
+  </Collection>
 
   <div class="container sensors">
     <h2>Sensors</h2>
@@ -88,7 +98,7 @@
 
     <ul>
       {#each caseInstance.sensors as sensor}
-        <li>{sensor}</li>
+        <li>{sensor} - luchtmeetnet.nl</li>
       {/each}
     </ul>
     {#if !addingSensor}
@@ -114,31 +124,37 @@
       path={caseRef.collection('entries')}
       query={entriesQuery}
       let:data={entries}>
-      <ul>
-        {#each entries as entry}
-          <li class="entry">
-            <h3 class="entry-title">{entry.title}</h3>
-            <p class="timestamp">{readableDate(entry.timestamp.toDate())}</p>
-            <p>{entry.description}</p>
+      {#if entries.length > 0}
+        <ul>
+          {#each entries as entry}
+            <li class="entry">
+              <h3 class="entry-title">{entry.title}</h3>
+              <p class="timestamp">{readableDate(entry.timestamp.toDate())}</p>
+              <p>{entry.description}</p>
 
-            {#each entry.attachments as attachment}
-              <div class="attachment">
-                {#if attachment.type === 'photo'}
-                  <figure>
-                    <img src={attachment.url} alt={attachment.alt} />
-                    <figcaption>{attachment.caption}</figcaption>
-                  </figure>
-                {:else}
-                  <div class="sensor">
-                    <span>Sensor reading:</span>
-                    {readableAnomaly(attachment)}
-                  </div>
-                {/if}
-              </div>
-            {/each}
-          </li>
-        {/each}
-      </ul>
+              {#each entry.attachments as attachment}
+                <div class="attachment">
+                  {#if attachment.type === 'photo'}
+                    <figure>
+                      <img src={attachment.url} alt={attachment.alt} />
+                      <figcaption>{attachment.caption}</figcaption>
+                    </figure>
+                  {:else}
+                    <div class="sensor">
+                      <span>Sensor reading:</span>
+                      {readableAnomaly(attachment)}
+                    </div>
+                  {/if}
+                </div>
+              {/each}
+            </li>
+          {/each}
+        </ul>
+      {:else}
+        <p>
+          No case entries yet. Use the plus button at the bottom of the screen to add your first entry.
+        </p>
+      {/if}
     </Collection>
   </div>
 </Doc>
