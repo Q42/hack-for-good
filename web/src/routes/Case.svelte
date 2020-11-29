@@ -241,7 +241,7 @@
     margin-left: 15px;
     vertical-align: 1px;
     display: inline-block;
-    width: 120px;
+    width: 150px;
     height: 6px;
     background: rgba(255,255,255,0.5);
     border-radius: 5px;
