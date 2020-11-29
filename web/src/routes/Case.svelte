@@ -29,7 +29,7 @@
     <p>{caseInstance.description}</p>
   </header>
 
-  <main class="container">
+  <div class="container">
     <h2>Unseen notifications</h2>
     <Collection
       path={caseRef.collection('unseen_measurements')}
@@ -48,7 +48,9 @@
         {/each}
       </ul>
     </Collection>
+  </div>
 
+  <div class="container">
     <h2>Sensors</h2>
     <p>You are currently subscribed to anomalous activity on these sensors:</p>
     <ul>
@@ -71,7 +73,9 @@
           }
         }} />
     {/if}
+  </div>
 
+  <div class="container">
     <h2>Case entries</h2>
     <Collection
       path={caseRef.collection('entries')}
@@ -98,7 +102,7 @@
         {/each}
       </ul>
     </Collection>
-  </main>
+  </div>
 </Doc>
 
 <Link
@@ -117,7 +121,7 @@
     margin-top: 2px;
   }
 
-  main {
+  .container:last-of-type {
     padding-bottom: 100px;
   }
 

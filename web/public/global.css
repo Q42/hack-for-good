@@ -16,7 +16,7 @@ body {
 }
 
 .container {
-	padding: 10px 25px;
+	padding: 25px;
 }
 
 header {
@@ -70,6 +70,7 @@ button, .button {
 	border: none;
 	padding: 10px 30px;
 	border-radius: 19px;
+	line-height: 1.15;
 }
 
 button:disabled{
