@@ -30,6 +30,10 @@
         }
 
         const newMeasurement = res.data();
+        if (newMeasurement.url) {
+          images = [...images, newMeasurement.url];
+        }
+
         measurements = [...measurements, newMeasurement];
       });
   }
