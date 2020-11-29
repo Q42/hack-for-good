@@ -11,13 +11,23 @@
 
   const db = firebase.firestore();
 
+  type Image = {
+    caption: string,
+    alt: string,
+    url: string
+  }
+
   let measurements: any[] = [];
-  let images: string[] = [];
+  let images: Image[] = [];
   let title: string = "";
   let description: string = "";
 
   function imageUploadSucceeded(e: CustomEvent<{ downloadURL: string }>) {
-    images = [...images, e.detail.downloadURL];
+    images = [...images, {
+      caption: '',
+      alt: '',
+      url: e.detail.downloadURL
+    }];
   }
 
   const { measurement } = parse(location.search);
@@ -37,9 +47,9 @@
   async function save() {
     const imageAttachments = images.map((x) => ({
       type: "photo",
-      alt: "",
-      caption: "",
-      url: x,
+      alt: x.alt,
+      caption: x.caption,
+      url: x.url,
     }));
 
     const entry = {
@@ -88,11 +98,27 @@
 
   {#if images.length > 0}
     <ul>
-      {#each images as image}
-        <!-- svelte-ignore a11y-img-redundant-alt -->
-        <li><img src={image} alt="User uploaded image" /></li>
+      {#each images as image, i}
+        <li>
+          <div class="form-row">
+            <p class="label">Preview</p>
+            <img src={image.url} alt="Upload number {i + 1}" />
+          </div>
+
+          <div class="form-row">
+            <label for="alt-input-{i}">Alt</label>
+            <input type="text" id="alt-input-{i}" bind:value={image.alt} />
+          </div>
+
+          <div class="form-row">
+            <label for="caption-input-{i}">Caption</label>
+            <input type="text" id="caption-input-{i}" bind:value={image.caption} />
+          </div>
+        </li>
       {/each}
     </ul>
+  {:else}
+    <h3>no images added yet</h3>
   {/if}
 
   <UploadImage on:imageUploadSucceeded={imageUploadSucceeded} />
@@ -131,6 +157,11 @@
     margin-top: 0;
   }
 
+  h3 {
+    text-align: center;
+    color: #888;
+  }
+
   .form-row {
     display: flex;
     flex-direction: column;
@@ -140,7 +171,8 @@
     margin-top: 21px;
   }
 
-  .form-row label {
+  .form-row label,
+  .form-row .label {
     margin-bottom: 5px;
     font-weight: bold;
   }
@@ -148,5 +180,19 @@
   .container.bg {
     background: #eee;
     margin: 20px 0;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    padding-bottom: 30px;
+  }
+
+  li:not(:last-child) {
+    border-bottom: 1px solid #ccc;
   }
 </style>

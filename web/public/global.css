@@ -71,6 +71,7 @@ button, .button {
 	padding: 10px 30px;
 	border-radius: 19px;
 	line-height: 1.15;
+	display: inline-block;
 }
 
 button:disabled{

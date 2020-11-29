@@ -121,7 +121,7 @@
     margin-top: 2px;
   }
 
-  .container:last-of-type {
+  div.container:last-of-type {
     padding-bottom: 100px;
   }
 

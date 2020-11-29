@@ -56,18 +56,6 @@
     border-color: #666;
   }
 
-  label {
-    display: block;
-    text-align: center;
-    margin: 21px 0;
-    padding: 30px 10px;
-    font-weight: bold;
-    background: white;
-    border: 1px solid #ccc;
-    color: #333;
-    border-radius: 5px;
-  }
-
   label.disabled {
     opacity: 0.5;
     cursor: disabled;
