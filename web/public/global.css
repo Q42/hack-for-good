@@ -81,6 +81,12 @@ button, .button {
 	border-radius: 19px;
 	line-height: 1.15;
 	display: inline-block;
+	text-decoration: none;
+}
+
+button.secondary {
+	background: white;
+	color: #333;
 }
 
 button:disabled{

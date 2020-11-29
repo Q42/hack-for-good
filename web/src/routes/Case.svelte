@@ -43,19 +43,23 @@
 
   <div class="container notifications">
     <h2>Unseen notifications</h2>
+
     <Collection
       path={caseRef.collection('unseen_measurements')}
       query={unseenMeasurementsQuery}
       let:data={measurements}>
+
       <ul>
         {#each measurements as measurement}
           <li>
-            <Link to="/add-case-entry/{id}?measurement={measurement.id}">
-              {measurement.formula}
-              {measurement.diff}
-              {measurement.type}
+            <p>
+              ⚠ {`${readableType(measurement.type)} in ${measurement.formula}.`}
+            </p>
+
+            <Link to="/add-case-entry/{id}?measurement={measurement.id}" getProps={() => ({ class: 'button' })}>
+              Add to case
             </Link>
-            <button on:click={() => measurement.ref.delete()}>Ignore</button>
+            <button on:click={() => measurement.ref.delete()} class="secondary">Ignore</button>
           </li>
         {/each}
       </ul>
@@ -141,10 +145,25 @@
     padding-bottom: 100px;
   }
 
+  .notifications ul,
   .entries ul {
     list-style: none;
     margin: 0;
     padding: 0;
+  }
+
+  .notifications li {
+    background: rgb(175 200 218);
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+  .notifications li + li {
+    margin-top: 10px;
+  }
+
+  .notifications li p {
+    margin-top: 0;
   }
 
   .entries li + li {
