@@ -4,6 +4,7 @@
   import Home from "./routes/Home.svelte";
   import Case from "./routes/Case.svelte";
   import CaseItem from "./routes/AddCaseEntry.svelte";
+  import AddCase from "./routes/AddCase.svelte";
 
   // import { FirebaseApp, User, Doc, Collection } from 'sveltefire';
   import { FirebaseApp } from "sveltefire";
@@ -37,6 +38,7 @@
   <Router {url}>
     <Route path="case/:id" component={Case} />
     <Route path="add-case-entry/:caseId" component={CaseItem} />
+    <Route path="add-case" component={AddCase} />
 
     <Route path="/" component={Home} />
     <Route path="*path" component={Error404} />
