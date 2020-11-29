@@ -46,11 +46,15 @@
     <Link to="/" getProps={() => ({ class: 'back' })}>↩ Home</Link>
 
     <h1>{caseInstance.name}</h1>
-    <p>{caseInstance.description}</p>
 
-    <div class="progress">
-      <span style="width: {getPercentage(caseInstance)}%"></span>
-    </div>
+    <p class="progress">
+      Case progress
+      <span class="progressbar">
+        <span style="width: {getPercentage(caseInstance)}%"></span>
+      </span>
+    </p>
+
+    <p>{caseInstance.description}</p>
   </header>
 
   <div class="container notifications">
@@ -146,10 +150,6 @@
 </Link>
 
 <style>
-  header {
-    padding-top: 35px;
-  }
-
   header h1 {
     margin-top: 2px;
   }
@@ -213,5 +213,27 @@
 
   .attachment + .attachment {
     margin-top: 15px;
+  }
+
+  header .progress {
+    color: #ddd;
+    font-size: small;
+  }
+
+  .progressbar {
+    margin-left: 15px;
+    vertical-align: 1px;
+    display: inline-block;
+    width: 120px;
+    height: 6px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 5px;
+  }
+
+  .progressbar span {
+    display: block;
+    height: 100%;
+    background: white;
+    border-radius: inherit;
   }
 </style>
