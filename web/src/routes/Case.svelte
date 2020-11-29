@@ -59,30 +59,31 @@
     <div class="progress"><span style="width: {progress}%" /></div>
   </header>
 
-  <div class="container notifications">
-    <h2>Unseen notifications</h2>
+  <Collection
+    path={caseRef.collection('unseen_measurements')}
+    query={unseenMeasurementsQuery}
+    let:data={measurements}> 
+    {#if measurements.length > 0}
+      <div class="container notifications">
+        <h2>Unseen notifications</h2>
 
-    <Collection
-      path={caseRef.collection('unseen_measurements')}
-      query={unseenMeasurementsQuery}
-      let:data={measurements}>
+        <ul>
+          {#each measurements as measurement}
+            <li>
+              <p>
+                ⚠ {`${readableAnomaly(measurement.type)} in ${measurement.formula}.`}
+              </p>
 
-      <ul>
-        {#each measurements as measurement}
-          <li>
-            <p>
-              ⚠ {`${readableAnomaly(measurement.type)} in ${measurement.formula}.`}
-            </p>
-
-            <Link to="/add-case-entry/{id}?measurement={measurement.id}" getProps={() => ({ class: 'button' })}>
-              Add to case
-            </Link>
-            <button on:click={() => measurement.ref.delete()} class="link">Ignore</button>
-          </li>
-        {/each}
-      </ul>
-    </Collection>
-  </div>
+              <Link to="/add-case-entry/{id}?measurement={measurement.id}" getProps={() => ({ class: 'button' })}>
+                Add to case
+              </Link>
+              <button on:click={() => measurement.ref.delete()} class="link">Ignore</button>
+            </li>
+          {/each}
+        </ul>
+      </div>
+    {/if}
+  </Collection>
 
   <div class="container sensors">
     <h2>Sensors</h2>
@@ -90,7 +91,7 @@
 
     <ul>
       {#each caseInstance.sensors as sensor}
-        <li>{sensor}</li>
+        <li>{sensor} - luchtmeetnet.nl</li>
       {/each}
     </ul>
     {#if !addingSensor}
