@@ -83,6 +83,35 @@
 
     navigate(`/case/${caseId}`);
   }
+
+  function readableDate(timestamp) {
+    const options = {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+
+    return new Date(timestamp).toLocaleString(undefined, options);
+  }
+
+  function readableAnomaly(measurement) {
+    const readableTimestamp = readableDate(measurement.timestamp.toDate());
+
+    if (measurement.type === "ANOMALOUS_INCREASE") {
+      return `${readableTimestamp}: Anomalous increase in ${measurement.formula}. Deviation: ${measurement.diff}.`;
+    }
+
+    if (measurement.type === "ANOMALOUS_DECREASE") {
+      return `${readableTimestamp}: Anomalous decrease in ${measurement.formula}. Deviation: ${measurement.diff}.`;
+    }
+
+    if (measurement.type === "ANOMALOUS_TIMESERIES") {
+      return `${readableTimestamp}: Anomalous timeseries for ${measurement.formula}.`;
+    }
+
+    return "Anomaly";
+  }
 </script>
 
 <div class="container header">
@@ -92,6 +121,17 @@
     Add case entry
   </h1>
 </div>
+
+{#if measurements.length > 0}
+  <div class="container bg">
+    <h2>Detected {measurements.length === 1 ? "anomaly" : "anomalies"}</h2>
+    <ul>
+      {#each measurements as measurement}
+        <li>{readableAnomaly(measurement)}</li>
+      {/each}
+    </ul>
+  </div>
+{/if}
 
 <div class="container">
   <div class="form-row">
@@ -137,26 +177,6 @@
 
   <UploadImage on:imageUploadSucceeded={imageUploadSucceeded} />
 </div>
-
-{#if measurements.length > 0}
-  <div class="container">
-    <div class="form-row">
-      <ul>
-        {#each measurements as measurement}
-          <li>
-            <div>
-              {measurement.formula}
-              {measurement.diff}
-              {measurement.sensorId}
-              {measurement.timestamp}
-              {measurement.type}
-            </div>
-          </li>
-        {/each}
-      </ul>
-    </div>
-  </div>
-{/if}
 
 <div class="container">
   <button on:click={save}>Save this entry</button>
