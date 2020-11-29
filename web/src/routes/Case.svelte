@@ -56,7 +56,7 @@
     <h1>{caseInstance.name}</h1>
 
     <p class="progress">
-      Case progress
+      Case strength
       <span class="progressbar">
         <span style="width: {progress}%" />
       </span>
@@ -234,6 +234,7 @@
   header .progress {
     color: #ddd;
     font-size: small;
+    margin-bottom: 10px;
   }
 
   .progressbar {
