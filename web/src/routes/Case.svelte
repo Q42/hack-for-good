@@ -19,7 +19,54 @@
 
     return new Date(timestamp).toLocaleString(undefined, options);
   }
+
+  function readableType(type) {
+    if (type === "ANOMALOUS_INCREASE") {
+      return "Anomalous increase";
+    }
+
+    if (type === "ANOMALOUS_DECREASE") {
+      return "Anomalous decrease";
+    }
+
+    return "Anomaly";
+  }
 </script>
+
+<style>
+  header {
+    padding-top: 35px;
+    padding-bottom: 5px;
+  }
+
+  header h1 {
+    margin-top: 2px;
+  }
+
+  main {
+    padding-bottom: 100px;
+  }
+
+  .timestamp {
+    margin: 0;
+    color: gray;
+    font-size: small;
+  }
+
+  .entry-title {
+    margin: 0;
+  }
+
+  .entry-title + p {
+    margin-top: 0;
+  }
+
+  .sensor {
+    background-color: lightgray;
+    padding: 15px;
+    border-radius: 10px;
+  }
+</style>
 
 <Doc path="cases/{id}" let:data={caseInstance} let:ref={caseRef}>
   <header class="container">
@@ -91,6 +138,11 @@
                     <img src={attachment.url} alt={attachment.alt} />
                     <figcaption>{attachment.caption}</figcaption>
                   </figure>
+                {:else}
+                  <div class="sensor">
+                    <span>Sensor reading:</span>
+                    {`${readableType(attachment.type)} in ${attachment.formula}. Deviation: ${attachment.diff}`}
+                  </div>
                 {/if}
               </div>
             {/each}
@@ -106,32 +158,3 @@
   getProps={() => ({ class: 'add-item', 'aria-label': 'add case item' })}>
   <span>⊕</span>
 </Link>
-
-<style>
-  header {
-    padding-top: 35px;
-    padding-bottom: 5px;
-  }
-
-  header h1 {
-    margin-top: 2px;
-  }
-
-  main {
-    padding-bottom: 100px;
-  }
-
-  .timestamp {
-    margin: 0;
-    color: gray;
-    font-size: small;
-  }
-
-  .entry-title {
-    margin: 0;
-  }
-
-  .entry-title + p {
-    margin-top: 0;
-  }
-</style>
