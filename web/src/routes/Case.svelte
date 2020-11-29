@@ -35,6 +35,10 @@
 
     return "Anomaly";
   }
+
+  function getPercentage(caseInstance) {
+    return Math.random() * 100;
+  }
 </script>
 
 <Doc path="cases/{id}" let:data={caseInstance} let:ref={caseRef}>
@@ -43,6 +47,10 @@
 
     <h1>{caseInstance.name}</h1>
     <p>{caseInstance.description}</p>
+
+    <div class="progress">
+      <span style="width: {getPercentage(caseInstance)}%"></span>
+    </div>
   </header>
 
   <div class="container notifications">
@@ -73,6 +81,7 @@
   <div class="container sensors">
     <h2>Sensors</h2>
     <p>You are currently subscribed to anomalous activity on these sensors:</p>
+
     <ul>
       {#each caseInstance.sensors as sensor}
         <li>{sensor}</li>
